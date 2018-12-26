@@ -3,8 +3,10 @@ package com.example.krawist.krawistmediaplayer.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,7 @@ public class AllMusicAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
-           ((AllMusicViewHolder)viewHolder).putData(listOfSong.get(i));
+           ((AllMusicViewHolder)viewHolder).putData(listOfSong.get(i),i);
     }
 
     @Override
@@ -68,7 +70,7 @@ public class AllMusicAdapter extends RecyclerView.Adapter {
 
         }
 
-        public void putData(final Musique musique){
+        public void putData(final Musique musique, final int position){
             textViewTitle.setText(musique.getMusicTitle());
             textViewDuration.setText(musique.DurationToString());
             textViewArtist.setText(musique.getAlbumName());
@@ -80,6 +82,15 @@ public class AllMusicAdapter extends RecyclerView.Adapter {
                     intent.putExtra(Helper.PLAYING_SONG,musique);
                     intent.putExtra(Helper.PLAYING_MUSIC_LIST,listOfSong);
                     itemView.getContext().startActivity(intent);
+                }
+            });
+
+            rootLayout.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                    menu.setHeaderTitle(musique.getMusicTitle());
+                    menu.add(position,R.id.action_share,0,R.string.action_share);
+                    menu.add(position,R.id.action_delete,0,R.string.action_delete);
                 }
             });
 

@@ -47,7 +47,7 @@ public class PlayerService extends Service {
     public static final int NOTIFICATION_REQUEST_CODE = 6;
     public static final int ACTION_PLAY_REQUEST_CODE = 7;
     public static final int RANDOM_PLAYING_ENABLED = 8;
-    public static final int RANDOM_PLAYING_DISABLED = 9;
+    public static final int RANDOM_PLAYING_DISABLED = 10;
     public static final String ACTION_PLAY = "com.example.krawist.krawistmediaplayer.actionplay";
     public static final String ACTION_NEXT = "com.example.krawist.krawistmediaplayer.actionnext";
     public static final String ACTION_PREVIOUS = "com.example.krawist.krawistmediaplayer.actionprevious";
@@ -134,6 +134,7 @@ public class PlayerService extends Service {
         @Override
         public void onCompletion(MediaPlayer mp) {
 
+            Log.e(TAG,"looping = "+looping);
             if(currentSongPosition==listOfSong.size()-1){
                if(looping==SONG_IS_LOOPING_ALL) {
                    updatePosition(nextSongPosition);
@@ -469,21 +470,6 @@ public class PlayerService extends Service {
             }
         }
 
-
-/*        private ServiceConnection connection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                PlayerService.LocalBinder binder = (PlayerService.LocalBinder)service;
-                playerService = binder.getService();
-                musique = playerService.getPlayingMusique();
-
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };*/
 
     }
 }

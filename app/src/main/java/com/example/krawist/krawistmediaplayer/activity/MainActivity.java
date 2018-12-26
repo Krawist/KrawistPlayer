@@ -59,34 +59,54 @@ public class MainActivity extends AppCompatActivity {
     static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int MY_PERMISSION_READ_EXTERNAL_STORAGE = 1;
+    private static final int MY_PERMISSION_WRITE_EXTERNAL_STORAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String[] PERMISSIONS = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (!hasPermission(MainActivity.this,PERMISSIONS)) {
 
             ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSION_READ_EXTERNAL_STORAGE );
+                    PERMISSIONS,MY_PERMISSION_READ_EXTERNAL_STORAGE );
 
         } else {
 
-            setContentView(R.layout.activity_main);
-            final Toolbar toolbar = findViewById(R.id.toolbar);
-            toolbar.setTitle("");
-            setSupportActionBar(toolbar);
-
-            configureViewPager();
-            initialiseVariable();
-
-            Intent playerServiceIntent = new Intent(this,PlayerService.class);
-            startService(playerServiceIntent);
-            bindService(playerServiceIntent,connection,Context.BIND_AUTO_CREATE);
+            initialiseApp();
         }
 
         //configureViewPager();
+    }
+
+    private void initialiseApp(){
+        setContentView(R.layout.activity_main);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
+        configureViewPager();
+        initialiseVariable();
+
+        Intent playerServiceIntent = new Intent(this,PlayerService.class);
+        startService(playerServiceIntent);
+        bindService(playerServiceIntent,connection,Context.BIND_AUTO_CREATE);
+    }
+
+    public boolean hasPermission(Context context, String... permissions){
+
+        if(context!=null && permissions!=null){
+            for(String permission: permissions){
+                if(ContextCompat.checkSelfPermission(context,permission)!=PackageManager.PERMISSION_GRANTED){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private void initialiseVariable(){
@@ -168,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    configureViewPager();
+                    initialiseApp();
                 }
             }
         }

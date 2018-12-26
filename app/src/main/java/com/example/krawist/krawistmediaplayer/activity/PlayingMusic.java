@@ -121,6 +121,12 @@ public class PlayingMusic extends AppCompatActivity {
         //playMusic();
     }
 
+    @Override
+    protected void onResume() {
+        Log.e(TAG,"on est dans le resume");
+        super.onResume();
+    }
+
     /*return the id of a song via the uri of that song*/
     private int getSongIdViaUri(Uri uri){
         String correctString = "";
