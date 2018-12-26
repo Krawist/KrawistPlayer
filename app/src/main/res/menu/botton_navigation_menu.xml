@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/navigation_library"
+        android:icon="@drawable/ic_music_note_black_24dp"
+        android:title="@string/allmusic_toolbar_label"/>
+
+    <item android:id="@+id/navigation_favorite"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title="Favoris"/>
+
+    <item android:id="@+id/navigation_folder"
+        android:icon="@drawable/ic_folder_black_24dp"
+        android:title="Dossiers"/>
+</menu>
