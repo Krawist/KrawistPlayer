@@ -90,7 +90,8 @@ public class AllMusicAdapter extends RecyclerView.Adapter {
                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                     menu.setHeaderTitle(musique.getMusicTitle());
                     menu.add(position,R.id.action_share,0,R.string.action_share);
-                    menu.add(position,R.id.action_delete,0,R.string.action_delete);
+                    menu.add(position,R.id.action_delete,1,R.string.action_delete);
+                    menu.add(position,R.id.action_detail,2,R.string.action_detail);
                 }
             });
 

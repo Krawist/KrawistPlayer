@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,10 +99,11 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter{
 
         }
 
-        public void putData(final Musique musique, int position, Album album){
+        public void putData(final Musique musique, int k, Album album){
 
             //Log.e("Krawist","le i dans le putData "+position);
             albumId = album.getAlbumId();
+            final int position = k;
             if(position==0){
                 if(album.getNumberOfSong()>1)
                     numberOfSong.setText(album.getNumberOfSong()+" Musiques");
@@ -123,6 +125,7 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter{
                 textViewTitle.setText(musique.getMusicTitle());
                 textViewDuration.setText(musique.DurationToString());
                 textViewArtist.setText(musique.getArtistName());
+
                 racine.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -130,6 +133,16 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter{
                         intent.putExtra(Helper.PLAYING_MUSIC_LIST,listOfMusic);
                         intent.putExtra(Helper.PLAYING_SONG,musique);
                         itemView.getContext().startActivity(intent);
+                    }
+                });
+
+                racine.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                    @Override
+                    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                        menu.setHeaderTitle(musique.getMusicTitle());
+                        menu.add(position,R.id.action_share,0,R.string.action_share);
+                        menu.add(position,R.id.action_delete,1,R.string.action_delete);
+                        menu.add(position,R.id.action_detail,2,R.string.action_detail);
                     }
                 });
             }

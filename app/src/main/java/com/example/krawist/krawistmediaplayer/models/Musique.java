@@ -14,6 +14,16 @@ public class Musique implements Serializable {
     String pochette;
     int musicDuration;
     String musicTitle;
+    long musicTrack;
+    long size;
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
 
     public long getMusicTrack() {
         return musicTrack;
@@ -22,8 +32,6 @@ public class Musique implements Serializable {
     public void setMusicTrack(long musicTrack) {
         this.musicTrack = musicTrack;
     }
-
-    long musicTrack;
 
     public int getMusicDuration() {
         return musicDuration;
@@ -119,5 +127,6 @@ public class Musique implements Serializable {
         }else
             return minutesString+":"+secondsString;
     }
+
 
 }

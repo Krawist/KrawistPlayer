@@ -30,4 +30,10 @@
         <item name="android:textColor">#fff</item>
     </style>
 
+
+    <style name="DetailDialogStyle" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#000</item>
+    </style>
+
 </resources>

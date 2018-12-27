@@ -1,10 +1,12 @@
 package com.example.krawist.krawistmediaplayer.fragment;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,12 +18,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.krawist.krawistmediaplayer.R;
 import com.example.krawist.krawistmediaplayer.adapter.AllMusicAdapter;
 import com.example.krawist.krawistmediaplayer.helper.Helper;
 import com.example.krawist.krawistmediaplayer.models.Musique;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -82,7 +88,7 @@ public class AllMusicFragment extends Fragment {
 
                 Log.e(TAG,"on a clique sur share de "+song.getMusicTitle());
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("audio/*");
+                shareIntent.setType("file/*");
                 shareIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse(song.getMusicPath()));
                 startActivity(Intent.createChooser(shareIntent,"Partager via"));
                 break;
@@ -104,8 +110,43 @@ public class AllMusicFragment extends Fragment {
                     Toast.makeText(context,song.getMusicTitle()+" echec de la suppression ",Toast.LENGTH_SHORT);
                 }*/
                 break;
+
+            case R.id.action_detail:
+                openDialogDetail(song);
+                break;
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    private void openDialogDetail(Musique musique){
+        final Dialog dialog = new Dialog(context);
+
+        dialog.setContentView(R.layout.detail_song_dialog_layout);
+        TextView titre = dialog.findViewById(R.id.textview_detail_song_dialog_song_title);
+        TextView album = dialog.findViewById(R.id.textview_detail_song_dialog_song_album);
+        TextView artist = dialog.findViewById(R.id.textview_detail_song_dialog_song_artist);
+        TextView track = dialog.findViewById(R.id.textview_detail_song_dialog_song_track);
+        TextView size = dialog.findViewById(R.id.textview_detail_song_dialog_song_size);
+        TextView duration = dialog.findViewById(R.id.textview_detail_song_dialog_song_duration);
+        Button cancel = dialog.findViewById(R.id.button_detail_song_dialog_cancel);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        titre.setText(musique.getMusicTitle());
+        album.setText(musique.getAlbumName());
+        artist.setText(musique.getArtistName());
+        track.setText(musique.getMusicTrack()+"");
+        duration.setText(musique.DurationToString());
+        size.setText(musique.getSize()+"");
+
+        dialog.setCanceledOnTouchOutside(false);
+
+        dialog.show();
     }
 }

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp"
+    android:paddingRight="16dp"
+    android:paddingLeft="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:text="Details"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Titre: "
+            style="@style/DetailDialogStyle"/>
+
+        <TextView
+            android:id="@+id/textview_detail_song_dialog_song_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DetailDialogStyle"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:alpha=".1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Album: "
+            style="@style/DetailDialogStyle"/>
+
+        <TextView
+            android:id="@+id/textview_detail_song_dialog_song_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DetailDialogStyle"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:alpha=".1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Artiste: "
+            style="@style/DetailDialogStyle"/>
+
+        <TextView
+            android:id="@+id/textview_detail_song_dialog_song_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DetailDialogStyle"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:alpha=".1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Piste: "
+            style="@style/DetailDialogStyle"/>
+
+        <TextView
+            android:id="@+id/textview_detail_song_dialog_song_track"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DetailDialogStyle"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:alpha=".1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Durée: "
+            style="@style/DetailDialogStyle"/>
+
+        <TextView
+            android:id="@+id/textview_detail_song_dialog_song_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DetailDialogStyle"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:alpha=".1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Taille: "
+            style="@style/DetailDialogStyle"/>
+
+        <TextView
+            android:id="@+id/textview_detail_song_dialog_song_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DetailDialogStyle"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:alpha=".1"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingRight="16dp">
+
+        <Button
+            android:id="@+id/button_detail_song_dialog_cancel"
+            android:background="@color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Annuler"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

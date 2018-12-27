@@ -1,6 +1,8 @@
 package com.example.krawist.krawistmediaplayer.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,10 +10,14 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.krawist.krawistmediaplayer.R;
 import com.example.krawist.krawistmediaplayer.adapter.AlbumSongsAdapter;
@@ -20,6 +26,7 @@ import com.example.krawist.krawistmediaplayer.models.Album;
 import com.example.krawist.krawistmediaplayer.models.Musique;
 import com.example.krawist.krawistmediaplayer.service.PlayerService;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class DetailAlbum extends AppCompatActivity {
@@ -31,6 +38,7 @@ public class DetailAlbum extends AppCompatActivity {
     TextView toolbarLabel;
     Toolbar toolbar;
     FloatingActionButton floatingActionButton;
+    private static final String TAG = DetailAlbum.class.getSimpleName();
 
 
 
@@ -85,7 +93,77 @@ public class DetailAlbum extends AppCompatActivity {
         AlbumSongsAdapter adapter = new AlbumSongsAdapter(listOfAlbumSong,album);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+        registerForContextMenu(recyclerView);
 
+    }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        Musique song = listOfAlbumSong.get(item.getGroupId());
+        switch (item.getItemId()){
+            case R.id.action_share:
+
+                Log.e(TAG,"on a clique sur share de "+song.getMusicTitle());
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("file/*");
+                shareIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse(song.getMusicPath()));
+                startActivity(Intent.createChooser(shareIntent,"Partager via"));
+                break;
+
+            case R.id.action_delete:
+                Log.e(TAG,"on a clique sur delete de "+Uri.parse(song.getMusicPath()).getPath());
+                File file=  new File(song.getMusicPath());
+                if(file.exists()){
+                    Toast.makeText(this,song.getMusicTitle()+" existe",Toast.LENGTH_SHORT);
+                }else{
+                    Toast.makeText(this,song.getMusicTitle()+" n'existe pas",Toast.LENGTH_SHORT);
+                }
+                /*boolean deleted = file.delete();
+                if(deleted){
+                    Toast.makeText(context,song.getMusicTitle()+" a été supprimé",Toast.LENGTH_SHORT);
+                    adapter.notifyDataSetChanged();
+                }else{
+                    Toast.makeText(context,song.getMusicTitle()+" echec de la suppression ",Toast.LENGTH_SHORT);
+                }*/
+                break;
+
+            case R.id.action_detail:
+                openDialogDetail(song);
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    private void openDialogDetail(Musique musique){
+        final Dialog dialog = new Dialog(this);
+
+        dialog.setContentView(R.layout.detail_song_dialog_layout);
+        TextView titre = dialog.findViewById(R.id.textview_detail_song_dialog_song_title);
+        TextView album = dialog.findViewById(R.id.textview_detail_song_dialog_song_album);
+        TextView artist = dialog.findViewById(R.id.textview_detail_song_dialog_song_artist);
+        TextView track = dialog.findViewById(R.id.textview_detail_song_dialog_song_track);
+        TextView size = dialog.findViewById(R.id.textview_detail_song_dialog_song_size);
+        TextView duration = dialog.findViewById(R.id.textview_detail_song_dialog_song_duration);
+        Button cancel = dialog.findViewById(R.id.button_detail_song_dialog_cancel);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        titre.setText(musique.getMusicTitle());
+        album.setText(musique.getAlbumName());
+        artist.setText(musique.getArtistName());
+        track.setText(musique.getMusicTrack()+"");
+        duration.setText(musique.DurationToString());
+        size.setText(musique.getSize()+"");
+
+        dialog.setCanceledOnTouchOutside(false);
+
+        dialog.show();
     }
 }

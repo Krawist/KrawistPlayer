@@ -44,7 +44,8 @@ public class Helper {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TRACK,
-                MediaStore.Audio.Media.IS_MUSIC};
+                MediaStore.Audio.Media.IS_MUSIC,
+                MediaStore.Audio.Media.SIZE};
 
         String selection = MediaStore.Audio.Media.IS_MUSIC + " = ?";
         String[] selectionArgs = {1+""};
@@ -93,7 +94,8 @@ public class Helper {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TRACK,
-                MediaStore.Audio.Media.IS_MUSIC};
+                MediaStore.Audio.Media.IS_MUSIC,
+                MediaStore.Audio.Media.SIZE};
 
         String selection = MediaStore.Audio.Media.ALBUM_ID + " = ? ";
         String[] selectionArgs = {String.valueOf(albumId)};
@@ -123,6 +125,7 @@ public class Helper {
         musique.setMusicTitle(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
         musique.setMusicDuration(cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)));
         musique.setMusicTrack(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK)));
+        musique.setSize(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE)));
 
         String[] projection = {MediaStore.Audio.Albums.ALBUM_ART, MediaStore.Audio.Albums._ID};
         String[] selectionArgs = {musique.getAlbumId()+""};
@@ -226,7 +229,8 @@ public class Helper {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TRACK,
-                MediaStore.Audio.Media.IS_MUSIC};
+                MediaStore.Audio.Media.IS_MUSIC,
+                MediaStore.Audio.Media.SIZE};
 
         String selection = MediaStore.Audio.Media._ID + " = ? ";
         String[] selectionArgs = {String.valueOf(songId)};
