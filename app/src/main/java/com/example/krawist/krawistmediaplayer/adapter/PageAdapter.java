@@ -36,7 +36,13 @@ public class PageAdapter extends FragmentPagerAdapter {
                 Log.e(TAG,"dans le getItem de albumFragment");
                 break;
 /*            case 2:
-                fragment = new ArtistFragment();
+                //fragment = new ArtistFragment();
+                //fragment =  new AllMusicFragment();
+                Log.e(TAG,"dans le getItem de artistFragment");
+                break;
+            case 3:
+                //fragment = new ArtistFragment();
+                //fragment =  new AllMusicFragment();
                 Log.e(TAG,"dans le getItem de artistFragment");
                 break;*/
         }
@@ -57,6 +63,10 @@ public class PageAdapter extends FragmentPagerAdapter {
                 break;
 /*            case 2:
                 title = "Artistes";
+                break;
+
+            case 3:
+                title = "Genres";
                 break;*/
         }
        return title;

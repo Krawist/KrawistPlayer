@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KrawistMediaPlayer</string>
+    <string name="app_name">KrawistMusic</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -12,4 +12,8 @@
     <string name="action_share">Partager</string>
     <string name="action_delete">Supprimer</string>
     <string name="action_detail">Detail</string>
+
+    <string name="delete_dialog_content">Voulez vous vraiment supprimer ce morceau?</string>
+    <string name="delete_dialog_cancel_button_label">Annuler</string>
+    <string name="delete_dialog_validate_button_label">Supprimer</string>
 </resources>

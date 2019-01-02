@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,20 +70,28 @@ public class AllMusicFragment extends Fragment {
         this.context = container.getContext();
 
         listOfSong = Helper.getAllMusique(context);
+/*        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                listOfSong = Helper.updateMusic(context,listOfSong);
+                adapter.notifyDataSetChanged();
+            }
+        }).start();*/
 
         recyclerView = rootView.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
          adapter = new AllMusicAdapter(context, listOfSong);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(context,LinearLayoutManager.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         registerForContextMenu(recyclerView);
         return rootView;
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(final MenuItem item) {
 
-        Musique song = listOfSong.get(item.getGroupId());
+        final Musique song = listOfSong.get(item.getGroupId());
         switch (item.getItemId()){
             case R.id.action_share:
 
@@ -94,21 +103,31 @@ public class AllMusicFragment extends Fragment {
                 break;
 
             case R.id.action_delete:
-                Log.e(TAG,"on a clique sur delete de "+Uri.parse(song.getMusicPath()).getPath());
-                File file=  new File(song.getMusicPath());
-                file.delete();
-                if(file.exists()){
-                    Toast.makeText(context,song.getMusicTitle()+" existe",Toast.LENGTH_SHORT);
-                }else{
-                    Toast.makeText(context,song.getMusicTitle()+" n'existe pas",Toast.LENGTH_SHORT);
-                }
-                /*boolean deleted = file.delete();
-                if(deleted){
-                    Toast.makeText(context,song.getMusicTitle()+" a été supprimé",Toast.LENGTH_SHORT);
-                    adapter.notifyDataSetChanged();
-                }else{
-                    Toast.makeText(context,song.getMusicTitle()+" echec de la suppression ",Toast.LENGTH_SHORT);
-                }*/
+
+                final Dialog deletedDialog = new Dialog(context);
+                deletedDialog.setContentView(R.layout.delete_dialog_layout);
+                Button cancel = deletedDialog.findViewById(R.id.button_delete_dialog_cancel);
+                Button validate = deletedDialog.findViewById(R.id.button_delete_dialog_validate);
+                deletedDialog.setCanceledOnTouchOutside(false);
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deletedDialog.dismiss();
+                    }
+                });
+
+                validate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        deleteFile(song,item.getGroupId());
+                        deletedDialog.dismiss();
+                    }
+                });
+
+                deletedDialog.show();
+
                 break;
 
             case R.id.action_detail:
@@ -116,7 +135,17 @@ public class AllMusicFragment extends Fragment {
                 break;
         }
 
+        adapter.notifyDataSetChanged();
+
         return super.onContextItemSelected(item);
+    }
+
+    private void deleteFile(Musique song, int position){
+
+        File file=  new File(song.getMusicPath());
+        file.delete();
+       Helper.deleteSpecificSong(context,song.getMusicId());
+        adapter.removeItem(position);
     }
 
     private void openDialogDetail(Musique musique){

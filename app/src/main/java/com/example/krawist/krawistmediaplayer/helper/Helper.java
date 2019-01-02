@@ -126,6 +126,7 @@ public class Helper {
         musique.setMusicDuration(cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)));
         musique.setMusicTrack(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK)));
         musique.setSize(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE)));
+        musique.setPochette(Helper.DEFAULT_ALBUM_ART_STRING);
 
         String[] projection = {MediaStore.Audio.Albums.ALBUM_ART, MediaStore.Audio.Albums._ID};
         String[] selectionArgs = {musique.getAlbumId()+""};
@@ -143,6 +144,31 @@ public class Helper {
 
         return musique;
     }
+
+    public static ArrayList<Musique> updateMusic(Context context, ArrayList<Musique> listOfSong){
+
+        for(Musique musique: listOfSong){
+            String[] projection = {MediaStore.Audio.Albums.ALBUM_ART, MediaStore.Audio.Albums._ID};
+            String[] selectionArgs = {musique.getAlbumId()+""};
+            //Log.e("Krawist"," Album Id "+musique.getAlbumId());
+            String selection = MediaStore.Audio.Albums._ID + " = ?";
+            Cursor anotherCursor = context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,projection,selection,selectionArgs,null);
+            if(anotherCursor.moveToFirst()){
+                if(anotherCursor.getString(anotherCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))==null){
+                    musique.setPochette(Helper.DEFAULT_ALBUM_ART_STRING);
+                }else{
+                    musique.setPochette(anotherCursor.getString(anotherCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)));
+                }
+
+            }
+        }
+
+        return listOfSong;
+    }
+
+    /*public void get(Context context){
+        context.getContentResolver().query(MediaStore.Audio.)
+    }*/
 
     public static Album matchCursorLineToAlbum(Context context,Cursor cursor){
         Album album = new Album();
@@ -278,6 +304,22 @@ public class Helper {
         return inSampleSize;
     }
 
+    public static void deleteSpecificSong(Context context,Long... ids){
+        String selection = "";
+        String[] selectionArgs = new String[ids.length];
+        if(ids.length>0){
+            for(int i=0;i<ids.length;i++){
+                if(i==ids.length-1)
+                    selection = selection + MediaStore.Audio.Media._ID  +" = ? ";
+                else
+                    selection = selection + MediaStore.Audio.Media._ID  +" = ? OR ";
+
+                selectionArgs[i]=String.valueOf(ids[i]);
+            }
+        }
+
+        context.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,selection,selectionArgs);
+    }
 
     public static Bitmap decodeSampleBitmap(Resources res, int resId, int reqWidth, int reqHeight){
 

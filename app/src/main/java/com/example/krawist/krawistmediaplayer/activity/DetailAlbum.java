@@ -37,6 +37,7 @@ public class DetailAlbum extends AppCompatActivity {
     ImageButton backButton;
     TextView toolbarLabel;
     Toolbar toolbar;
+    AlbumSongsAdapter adapter;
     FloatingActionButton floatingActionButton;
     private static final String TAG = DetailAlbum.class.getSimpleName();
 
@@ -90,21 +91,29 @@ public class DetailAlbum extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        AlbumSongsAdapter adapter = new AlbumSongsAdapter(listOfAlbumSong,album);
+        adapter = new AlbumSongsAdapter(listOfAlbumSong,album);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
         registerForContextMenu(recyclerView);
 
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    private void deleteFile(Musique song, int position){
 
-        Musique song = listOfAlbumSong.get(item.getGroupId());
+        File file=  new File(song.getMusicPath());
+        file.delete();
+        Helper.deleteSpecificSong(this,song.getMusicId());
+        adapter.removeItem(position);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onContextItemSelected(final MenuItem item) {
+
+        final Musique song = listOfAlbumSong.get(item.getGroupId());
         switch (item.getItemId()){
             case R.id.action_share:
 
-                Log.e(TAG,"on a clique sur share de "+song.getMusicTitle());
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("file/*");
                 shareIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse(song.getMusicPath()));
@@ -112,25 +121,36 @@ public class DetailAlbum extends AppCompatActivity {
                 break;
 
             case R.id.action_delete:
-                Log.e(TAG,"on a clique sur delete de "+Uri.parse(song.getMusicPath()).getPath());
-                File file=  new File(song.getMusicPath());
-                if(file.exists()){
-                    Toast.makeText(this,song.getMusicTitle()+" existe",Toast.LENGTH_SHORT);
-                }else{
-                    Toast.makeText(this,song.getMusicTitle()+" n'existe pas",Toast.LENGTH_SHORT);
-                }
-                /*boolean deleted = file.delete();
-                if(deleted){
-                    Toast.makeText(context,song.getMusicTitle()+" a été supprimé",Toast.LENGTH_SHORT);
-                    adapter.notifyDataSetChanged();
-                }else{
-                    Toast.makeText(context,song.getMusicTitle()+" echec de la suppression ",Toast.LENGTH_SHORT);
-                }*/
+                Log.e(TAG,"on est dans le delete de "+song.getMusicTitle());
+                final Dialog deletedDialog = new Dialog(this);
+                deletedDialog.setContentView(R.layout.delete_dialog_layout);
+                Button cancel = deletedDialog.findViewById(R.id.button_delete_dialog_cancel);
+                Button validate = deletedDialog.findViewById(R.id.button_delete_dialog_validate);
+                deletedDialog.setCanceledOnTouchOutside(false);
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deletedDialog.dismiss();
+                    }
+                });
+
+                validate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        deleteFile(song,item.getGroupId());
+                        deletedDialog.dismiss();
+                    }
+                });
+
+                deletedDialog.show();
                 break;
 
             case R.id.action_detail:
                 openDialogDetail(song);
                 break;
+
         }
 
         return super.onContextItemSelected(item);

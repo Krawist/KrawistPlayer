@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
     FloatingActionButton floatingActionButton;
-    PlayerService playerService;
+    PlayerService playerService = null;
     boolean bound = false;
     TextView songName;
     TextView songArtist;
@@ -91,9 +91,11 @@ public class MainActivity extends AppCompatActivity {
         configureViewPager();
         initialiseVariable();
 
-        Intent playerServiceIntent = new Intent(this,PlayerService.class);
-        startService(playerServiceIntent);
-        bindService(playerServiceIntent,connection,Context.BIND_AUTO_CREATE);
+        if(playerService==null){
+            Intent playerServiceIntent = new Intent(this,PlayerService.class);
+            startService(playerServiceIntent);
+            bindService(playerServiceIntent,connection,Context.BIND_AUTO_CREATE);
+        }
     }
 
     public boolean hasPermission(Context context, String... permissions){

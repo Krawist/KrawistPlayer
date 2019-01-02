@@ -70,7 +70,7 @@ public class PlayingMusic extends AppCompatActivity {
     UpdateSeekBarPosition seekBarPosition = new UpdateSeekBarPosition();
 
 
-    PlayerService playerService;
+    PlayerService playerService = null;
     boolean bound = false;
 
     Handler handler = new Handler();
@@ -262,8 +262,10 @@ public class PlayingMusic extends AppCompatActivity {
             Intent playerServiceIntent = new Intent(this,PlayerService.class);
             playerServiceIntent.putExtra(Helper.PLAYING_SONG,selectedMusique);
             playerServiceIntent.putExtra(Helper.PLAYING_MUSIC_LIST,listOfSong);
-            startService(playerServiceIntent);
-            bindService(playerServiceIntent,connection,Context.BIND_AUTO_CREATE);
+            if(playerService==null){
+                startService(playerServiceIntent);
+                bindService(playerServiceIntent,connection,Context.BIND_AUTO_CREATE);
+            }
             //Log.e("Krawist","le service a été démarré");
         }
     }

@@ -137,5 +137,11 @@ public class AlbumAdapter extends RecyclerView.Adapter {
                 }
             });
         }
+
+    }
+
+    public void swapItems(ArrayList<Album> list){
+        this.listOfAlbum = list;
+        notifyDataSetChanged();
     }
 }

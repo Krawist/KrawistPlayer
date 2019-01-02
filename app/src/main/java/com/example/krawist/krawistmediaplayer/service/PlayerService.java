@@ -354,10 +354,11 @@ public class PlayerService extends Service {
 
         @Override
         public void onFinish() {
-            stopForeground(true);
+            stopForeground(false);
             stopSelf();
         }
     };
+
 
     public int setMusicRepeatMode(){
         if(looping==SONG_IS_NOT_LOOPING){
@@ -396,7 +397,6 @@ public class PlayerService extends Service {
             if(mediaPlayer!=null){
                 musique = listOfSong.get(currentSongPosition);
                 mediaPlayer.stop();
-                isPlaying = false;
                 mediaPlayer = MediaPlayer.create(getBaseContext(),Uri.parse(musique.getMusicPath()));
                 if(isPlaying){
                     mediaPlayer.start();
@@ -417,7 +417,6 @@ public class PlayerService extends Service {
             musique = listOfSong.get(currentSongPosition);
             if(mediaPlayer!=null){
                 mediaPlayer.stop();
-                isPlaying = false;
                 mediaPlayer = MediaPlayer.create(getBaseContext(),Uri.parse(musique.getMusicPath()));
                 if(isPlaying){
                     mediaPlayer.start();

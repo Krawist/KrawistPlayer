@@ -33,6 +33,8 @@ public class AlbumFragment extends Fragment {
 
     ArrayList<Album> listOfAlbum;
     Context context;
+    AlbumAdapter adapter;
+    private static final String TAG = AlbumFragment.class.getSimpleName();
 
     public AlbumFragment() {
         // Required empty public constructor
@@ -59,10 +61,15 @@ public class AlbumFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(),3));
         this.context = container.getContext();
         listOfAlbum = Helper.getAllAlbum(context);
-        AlbumAdapter adapter = new AlbumAdapter(listOfAlbum, context);
+         adapter = new AlbumAdapter(listOfAlbum, context);
         recyclerView.setAdapter(adapter);
-
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        listOfAlbum = Helper.getAllAlbum(context);
+        adapter.swapItems(listOfAlbum);
+    }
 }

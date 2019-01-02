@@ -98,4 +98,9 @@ public class AllMusicAdapter extends RecyclerView.Adapter {
 
         }
     }
+
+    public void removeItem(int position){
+        listOfSong.remove(position);
+        notifyItemRemoved(position);
+    }
 }

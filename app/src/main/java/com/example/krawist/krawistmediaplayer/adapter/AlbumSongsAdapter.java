@@ -148,4 +148,9 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter{
             }
         }
     }
+
+    public void removeItem(int position){
+        listOfMusic.remove(position);
+        notifyItemRemoved(position);
+    }
 }
