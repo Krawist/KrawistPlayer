@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="117dp"
-    android:layout_height="117dp"
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_marginLeft="2dp"
     android:layout_marginBottom="2dp"
     android:id="@+id/layout_root"
@@ -10,8 +10,7 @@
         <ImageView
             android:id="@+id/imageview_album_art"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_launcher_background"/>
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:layout_alignParentBottom="true"
@@ -30,7 +29,7 @@
                 android:id="@+id/textview_album_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="@dimen/albumdisplay_album_name_size"
                 android:text="Album"
                 android:singleLine="true"
                 android:gravity="center"
@@ -42,7 +41,7 @@
                 android:id="@+id/textview_album_artist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"
+                android:textSize="@dimen/albumdisplay_album_artist_size"
                 android:singleLine="true"
                 android:gravity="center"
                 android:text="Artist"

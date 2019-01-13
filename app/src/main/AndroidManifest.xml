@@ -3,7 +3,7 @@
     package="com.example.krawist.krawistmediaplayer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,47 +12,63 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.MainActivity"
+
+        <activity android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".activity.SearchActivity"/>
         </activity>
+
         <activity android:name=".activity.DetailAlbum" />
+
         <activity android:name=".activity.PlayingMusic">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW"/>
-                <data android:scheme="file"/>
-                <data android:mimeType="audio/*"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="audio/*" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW"/>
-                <data android:scheme="content"/>
-                <data android:mimeType="audio/*"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:scheme="content" />
+                <data android:mimeType="audio/*" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-<!--        <receiver android:name=".receiver.ServiceReceiver"
+        <service android:name=".service.PlayerService"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <activity android:name=".activity.SearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
+
+
+        <!--
+            <receiver android:name=".receiver.ServiceReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.krawist.krawistmediaplayer.actionplay"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
-        </receiver>-->
-
-        <service
-            android:name=".service.PlayerService"
-            android:enabled="true"
-            android:exported="false">
-        </service>
+        </receiver>
+        -->
     </application>
 
 </manifest>

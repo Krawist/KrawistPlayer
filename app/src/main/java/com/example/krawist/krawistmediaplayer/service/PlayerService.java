@@ -6,13 +6,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
@@ -20,11 +17,6 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.RemoteInput;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import com.example.krawist.krawistmediaplayer.R;
@@ -32,7 +24,6 @@ import com.example.krawist.krawistmediaplayer.activity.PlayingMusic;
 import com.example.krawist.krawistmediaplayer.helper.Helper;
 import com.example.krawist.krawistmediaplayer.models.Musique;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -53,26 +44,24 @@ public class PlayerService extends Service {
     public static final String ACTION_PREVIOUS = "com.example.krawist.krawistmediaplayer.actionprevious";
 
     private final IBinder binder = new LocalBinder();
-    MediaPlayer mediaPlayer = new MediaPlayer();
+    private MediaPlayer mediaPlayer = new MediaPlayer();
     private String TAG = PlayerService.class.getSimpleName();
-    Intent receivedIntent;
+    private Intent receivedIntent;
     private int repeatMode=0;
     private int randomMode = RANDOM_PLAYING_DISABLED;
     private boolean isPlaying = false;
-    ArrayList<Musique> listOfSong = new ArrayList<>();
-    ArrayList<Integer> listOfPlayedSongPosition = new ArrayList<>();
-    int looping = SONG_IS_NOT_LOOPING;
+    private ArrayList<Musique> listOfSong = new ArrayList<>();
+    private ArrayList<Integer> listOfPlayedSongPosition = new ArrayList<>();
+    private int looping = SONG_IS_NOT_LOOPING;
 
-    int currentSongPosition;
-    int previousSongPosition;
-    int nextSongPosition;
+    private int currentSongPosition;
+    private int previousSongPosition;
+    private int nextSongPosition;
 
-    Musique musique;
-
-    long songId=0;
+    private Musique playingMusic;
 
     public Musique getPlayingMusique(){
-        return this.musique;
+        return this.playingMusic;
     }
 
     public PlayerService() {
@@ -99,26 +88,14 @@ public class PlayerService extends Service {
 
         this.receivedIntent = intent;
         if(intent!=null && intent.getExtras()!=null){
-            musique = (Musique)intent.getExtras().getSerializable(Helper.PLAYING_SONG);
+
+            playingMusic = (Musique)intent.getExtras().getSerializable(Helper.PLAYING_SONG);
             listOfSong = (ArrayList<Musique>)intent.getExtras().getSerializable(Helper.PLAYING_MUSIC_LIST);
-            Log.e(TAG,musique.getMusicTitle());
+
+            isPlaying = true;
 
             playingMusicThread.interrupt();
             playingMusicThread.start();
-            isPlaying = true;
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for(int k=0;k<listOfSong.size();k++){
-                        if(musique.getMusicId()==listOfSong.get(k).getMusicId()){
-                            currentSongPosition = k;
-                            updatePosition(currentSongPosition);
-                            break;
-                        }
-                    }
-                }
-            }).start();
 
         }
 
@@ -134,32 +111,23 @@ public class PlayerService extends Service {
         @Override
         public void onCompletion(MediaPlayer mp) {
 
-            Log.e(TAG,"looping = "+looping);
             if(currentSongPosition==listOfSong.size()-1){
                if(looping==SONG_IS_LOOPING_ALL) {
-                   updatePosition(nextSongPosition);
-                   musique = listOfSong.get(currentSongPosition);
-                   mediaPlayer.stop();
-                   isPlaying = false;
-                   musique = listOfSong.get(currentSongPosition);
-                   mediaPlayer = MediaPlayer.create(getBaseContext(), Uri.parse(musique.getMusicPath()));
-                   mediaPlayer.start();
-                   isPlaying = true;
-                   mediaPlayer.setOnCompletionListener(onCompletionListener);
-                   startNotificationForeground();
+
+                   playNextSong();
+
                }else if(looping!=SONG_IS_LOOPING_ONE){
-                   stopForeground(true);
+
+                   isPlaying = false;
+
+                   startNotificationForeground();
+
+                   stopForeground(false);
                }
             }else if(looping==SONG_IS_NOT_LOOPING || looping==SONG_IS_LOOPING_ALL){
-                updatePosition(nextSongPosition);
-                musique = listOfSong.get(currentSongPosition);
-                mediaPlayer.stop();
-                isPlaying = false;
-                musique = listOfSong.get(currentSongPosition);
-                mediaPlayer = MediaPlayer.create(getBaseContext(),Uri.parse(musique.getMusicPath()));
-                mediaPlayer.start();
-                isPlaying = true;
-                mediaPlayer.setOnCompletionListener(onCompletionListener);
+
+                playNextSong();
+
                 startNotificationForeground();
             }
 
@@ -175,7 +143,6 @@ public class PlayerService extends Service {
         listOfPlayedSongPosition.add(nb);
         return nb;
     }
-
 
     private void updatePosition(int currentSongPosition){
         if(listOfSong.size()>0){
@@ -204,7 +171,7 @@ public class PlayerService extends Service {
         //PendingIntent pendingIntent = new PendingIntent()
 
         RemoteViews notificationLayout = new RemoteViews(getPackageName(),R.layout.notification_layout);
-        if(musique!=null){
+        if(playingMusic !=null){
 
             Intent playIntent = new Intent();
             playIntent.setAction(ACTION_PLAY);
@@ -252,13 +219,13 @@ public class PlayerService extends Service {
     }
 
     private void configureNotificationRemoteView(RemoteViews notificationLayout,PendingIntent playPendingIntent, PendingIntent nextPendingIntent, PendingIntent previousPendingIntent){
-        notificationLayout.setTextViewText(R.id.textview_notification_song_artist,musique.getArtistName());
-        notificationLayout.setTextViewText(R.id.textview_notification_song_title,musique.getMusicTitle());
+        notificationLayout.setTextViewText(R.id.textview_notification_song_artist, playingMusic.getArtistName());
+        notificationLayout.setTextViewText(R.id.textview_notification_song_title, playingMusic.getMusicTitle());
         Bitmap bitmap;
-        if(musique.getPochette().equals(Helper.DEFAULT_ALBUM_ART_STRING)){
+        if(playingMusic.getPochette().equals(Helper.DEFAULT_ALBUM_ART_STRING)){
             bitmap = Helper.decodeSampleBitmap(getResources(),R.drawable.default_background,600,600);
         }else{
-            bitmap = Helper.decodeSampleBitmap(musique.getPochette(),600,600);
+            bitmap = Helper.decodeSampleBitmap(playingMusic.getPochette(),600,600);
         }
         notificationLayout.setImageViewBitmap(R.id.imageview_notification_song_pochette,bitmap);
         if(mediaPlayer.isPlaying()){
@@ -295,15 +262,44 @@ public class PlayerService extends Service {
     Thread playingMusicThread = new Thread(new Runnable() {
         @Override
         public void run() {
-            runMusic();
+
+
+            /* on recherche la position du song choisi dans la liste des songs, pour
+            savoir quel song vient avant lui et quel autre apres
+             */
+            for(int k=0;k<listOfSong.size();k++){
+                if(playingMusic.getMusicId()==listOfSong.get(k).getMusicId()){
+                    currentSongPosition = k;
+                    updatePosition(currentSongPosition);
+                    break;
+                }
+            }
+
+            loadAndPlayMusic(currentSongPosition);
         }
     });
 
-    private void runMusic(){
+    private void loadAndPlayMusic(int position){
+        playingMusic = listOfSong.get(position);
+        if(mediaPlayer!=null){
             mediaPlayer.stop();
-            mediaPlayer = MediaPlayer.create(getBaseContext(),Uri.parse(musique.getMusicPath()));
-            mediaPlayer.start();
+            mediaPlayer = MediaPlayer.create(getBaseContext(),Uri.parse(playingMusic.getMusicPath()));
+            if(isPlaying){
+                mediaPlayer.start();
+                isPlaying = true;
+            }
             mediaPlayer.setOnCompletionListener(onCompletionListener);
+            mediaPlayer.setLooping(getRepeatMode());
+            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+
+                    playNextSong();
+
+                    return true;
+                }
+            });
+        }
     }
 
     public class LocalBinder extends Binder{
@@ -346,7 +342,7 @@ public class PlayerService extends Service {
         return state;
     }
 
-    CountDownTimer countDownTimer = new CountDownTimer(3000,3000) {
+    CountDownTimer countDownTimer = new CountDownTimer(10,10) {
         @Override
         public void onTick(long millisUntilFinished) {
 
@@ -393,18 +389,10 @@ public class PlayerService extends Service {
 
     public void playNextSong(){
         if(listOfSong.size()>0){
+
             updatePosition(nextSongPosition);
-            if(mediaPlayer!=null){
-                musique = listOfSong.get(currentSongPosition);
-                mediaPlayer.stop();
-                mediaPlayer = MediaPlayer.create(getBaseContext(),Uri.parse(musique.getMusicPath()));
-                if(isPlaying){
-                    mediaPlayer.start();
-                    isPlaying = true;
-                    mediaPlayer.setLooping(getRepeatMode());
-                    mediaPlayer.setOnCompletionListener(onCompletionListener);
-                }
-            }
+
+            loadAndPlayMusic(currentSongPosition);
 
             startNotificationForeground();
         }
@@ -413,18 +401,12 @@ public class PlayerService extends Service {
 
     public void playPreviousSong(){
         if(listOfSong.size()>0){
-            updatePosition(previousSongPosition);
-            musique = listOfSong.get(currentSongPosition);
-            if(mediaPlayer!=null){
-                mediaPlayer.stop();
-                mediaPlayer = MediaPlayer.create(getBaseContext(),Uri.parse(musique.getMusicPath()));
-                if(isPlaying){
-                    mediaPlayer.start();
-                    isPlaying = true;
-                    mediaPlayer.setLooping(getRepeatMode());
-                    mediaPlayer.setOnCompletionListener(onCompletionListener);
-                }
+
+            if(mediaPlayer.getCurrentPosition()<2000){
+                updatePosition(previousSongPosition);
             }
+
+            loadAndPlayMusic(currentSongPosition);
 
             startNotificationForeground();
         }
@@ -454,7 +436,7 @@ public class PlayerService extends Service {
         public void onReceive(Context context, Intent intent) {
 
             if(intent.getAction().equals(PlayerService.ACTION_PLAY)){
-                if(musique!=null){
+                if(playingMusic !=null){
                     setMusicPause();
                 }
             }

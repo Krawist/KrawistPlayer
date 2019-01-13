@@ -13,8 +13,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,6 +57,7 @@ public class AllMusicFragment extends Fragment {
 
     public AllMusicFragment() {
         // Required empty public constructor
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -65,18 +68,13 @@ public class AllMusicFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
          rootView =  inflater.inflate(R.layout.fragment_base_layout, container, false);
         this.context = container.getContext();
 
+
         listOfSong = Helper.getAllMusique(context);
-/*        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                listOfSong = Helper.updateMusic(context,listOfSong);
-                adapter.notifyDataSetChanged();
-            }
-        }).start();*/
 
         recyclerView = rootView.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -85,6 +83,8 @@ public class AllMusicFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(context,LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         registerForContextMenu(recyclerView);
+
+
         return rootView;
     }
 
@@ -144,7 +144,7 @@ public class AllMusicFragment extends Fragment {
 
         File file=  new File(song.getMusicPath());
         file.delete();
-       Helper.deleteSpecificSong(context,song.getMusicId());
+        Helper.deleteSpecificSong(context,song.getMusicId());
         adapter.removeItem(position);
     }
 
@@ -178,4 +178,25 @@ public class AllMusicFragment extends Fragment {
 
         dialog.show();
     }
+
+/*    @Override
+    public void onResume() {
+        super.onResume();
+
+        listOfSong = Helper.getAllMusique(context);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                listOfSong = Helper.updateMusic(context,listOfSong);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.swapItems(listOfSong);
+                    }
+                });
+            }
+        }).start();
+    }*/
+
 }

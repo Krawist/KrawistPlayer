@@ -94,13 +94,16 @@ public class AllMusicAdapter extends RecyclerView.Adapter {
                     menu.add(position,R.id.action_detail,2,R.string.action_detail);
                 }
             });
-
-
         }
     }
 
     public void removeItem(int position){
         listOfSong.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void swapItems(ArrayList<Musique> list){
+        this.listOfSong = list;
+        notifyDataSetChanged();
     }
 }

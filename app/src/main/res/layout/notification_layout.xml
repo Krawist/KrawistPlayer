@@ -1,87 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center">
 
-    <ImageView
-        android:layout_marginRight="4dp"
-        android:layout_gravity="center"
-        android:id="@+id/imageview_notification_song_pochette"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_launcher_background"/>
-
     <LinearLayout
-        android:layout_toRightOf="@id/imageview_notification_song_pochette"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_marginRight="16dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toLeftOf="@id/layout_control_song">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-        <TextView
-            android:singleLine="true"
-            android:id="@+id/textview_notification_song_title"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:layout_marginRight="4dp"
+            android:layout_gravity="center"
+            android:id="@+id/imageview_notification_song_pochette"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_launcher_background"/>
+
+        <LinearLayout
+            android:layout_toRightOf="@id/imageview_notification_song_pochette"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginRight="16dp"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            style="@style/TextAppearance.Compat.Notification.Title"
-            android:textSize="16sp"
-            android:text="Insomnie"/>
+            android:orientation="vertical"
+            android:layout_toLeftOf="@id/layout_control_song">
 
-        <TextView
-            android:singleLine="true"
-            android:id="@+id/textview_notification_song_artist"
+            <TextView
+                android:singleLine="true"
+                android:id="@+id/textview_notification_song_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                style="@style/TextAppearance.Compat.Notification.Title"
+                android:textSize="16sp"
+                android:text="Insomnie"/>
+
+            <TextView
+                android:singleLine="true"
+                android:id="@+id/textview_notification_song_artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.Compat.Notification.Title"
+                android:textSize="14sp"
+                android:alpha=".8"
+                android:text="Dehmo"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_control_song"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.Compat.Notification.Title"
-            android:textSize="14sp"
-            android:alpha=".8"
-            android:text="Dehmo"/>
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true">
 
+            <ImageButton
+                android:background="@drawable/button_background"
+                android:padding="4dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:id="@+id/imageview_notification_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_skip_previous_notification"/>
+
+            <ImageButton
+                android:background="@drawable/button_background"
+                android:padding="4dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:id="@+id/imageview_notification_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_play_arrow_notification"/>
+
+            <ImageButton
+                android:background="@drawable/button_background"
+                android:padding="4dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:id="@+id/imageview_notification_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_skip_next_notification"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_control_song"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_alignParentRight="true">
-
-        <ImageButton
-            android:background="@drawable/button_background"
-            android:padding="4dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:id="@+id/imageview_notification_previous"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_skip_previous_notification"/>
-
-        <ImageButton
-            android:background="@drawable/button_background"
-            android:padding="4dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:id="@+id/imageview_notification_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_play_arrow_notification"/>
-
-        <ImageButton
-            android:background="@drawable/button_background"
-            android:padding="4dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:id="@+id/imageview_notification_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_skip_next_notification"/>
-
-    </LinearLayout>
-
-
-
-</LinearLayout>
+</RelativeLayout>

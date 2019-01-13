@@ -2,15 +2,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.krawist.krawistmediaplayer.activity.MainActivity">
+
+    <item android:id="@+id/action_search"
+        android:title="rechercher"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_search"/>
+
     <item android:title="menu"
         android:icon="@drawable/ic_more_vert_black_24dp"
-        app:showAsAction="always">
+        app:showAsAction="always"
+        android:orderInCategory="100">
         <menu>
             <item
                 android:id="@+id/action_settings"
                 android:orderInCategory="100"
                 android:title="@string/action_settings"
                 app:showAsAction="never" />
+
+            <item android:id="@+id/action_grid_colums"
+                android:title="@string/action_grid_colums">
+
+                <menu>
+                    <item android:title="2 par ligne"
+                        android:id="@+id/action_grid_colums_2"/>
+                    <item android:title="3 par ligne"
+                        android:id="@+id/action_grid_colums_3"/>
+                    <item android:title="4 par ligne"
+                        android:id="@+id/action_grid_colums_4"/>
+                </menu>
+
+            </item>
         </menu>
     </item>
 

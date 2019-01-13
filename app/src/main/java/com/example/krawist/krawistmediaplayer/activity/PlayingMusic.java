@@ -355,6 +355,12 @@ public class PlayingMusic extends AppCompatActivity {
             }else{
                 shuffleButton.setAlpha(500);
             }
+
+            if(playerService.isPlaying()){
+                playButton.setImageResource(R.drawable.ic_pause_black_24dp);
+            }else{
+                playButton.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -93,6 +94,7 @@ public class DetailAlbum extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AlbumSongsAdapter(listOfAlbumSong,album);
         recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
         registerForContextMenu(recyclerView);
 
@@ -104,7 +106,9 @@ public class DetailAlbum extends AppCompatActivity {
         file.delete();
         Helper.deleteSpecificSong(this,song.getMusicId());
         adapter.removeItem(position);
-        adapter.notifyDataSetChanged();
+        if(listOfAlbumSong.size()==1){
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -185,5 +189,25 @@ public class DetailAlbum extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
 
         dialog.show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        listOfAlbumSong = Helper.getAllAlbumSongs(this,album.getAlbumId());
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                listOfAlbumSong = Helper.updateMusic(DetailAlbum.this,listOfAlbumSong);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.switchList(listOfAlbumSong);
+                    }
+                });
+            }
+        }).start();
     }
 }

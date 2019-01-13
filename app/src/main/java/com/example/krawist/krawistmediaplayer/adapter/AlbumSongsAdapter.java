@@ -153,4 +153,9 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter{
         listOfMusic.remove(position);
         notifyItemRemoved(position);
     }
+
+    public void switchList(ArrayList<Musique> listOfMusic){
+        this.listOfMusic = listOfMusic;
+        notifyDataSetChanged();
+    }
 }

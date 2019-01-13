@@ -11,6 +11,7 @@ import android.util.Log;
 import com.example.krawist.krawistmediaplayer.fragment.AlbumFragment;
 import com.example.krawist.krawistmediaplayer.fragment.AllMusicFragment;
 import com.example.krawist.krawistmediaplayer.fragment.ArtistFragment;
+import com.example.krawist.krawistmediaplayer.fragment.PlaylistFragment;
 
 public class PageAdapter extends FragmentPagerAdapter {
 
@@ -29,21 +30,15 @@ public class PageAdapter extends FragmentPagerAdapter {
         switch (i){
             case 0:
                 fragment =  new AllMusicFragment();
-                Log.e(TAG,"dans le getItem de allMusicFragment");
                 break;
             case 1:
                 fragment = new AlbumFragment();
-                Log.e(TAG,"dans le getItem de albumFragment");
                 break;
 /*            case 2:
-                //fragment = new ArtistFragment();
-                //fragment =  new AllMusicFragment();
-                Log.e(TAG,"dans le getItem de artistFragment");
+                fragment = new ArtistFragment();
                 break;
             case 3:
-                //fragment = new ArtistFragment();
-                //fragment =  new AllMusicFragment();
-                Log.e(TAG,"dans le getItem de artistFragment");
+                fragment = new PlaylistFragment();
                 break;*/
         }
 
@@ -66,7 +61,7 @@ public class PageAdapter extends FragmentPagerAdapter {
                 break;
 
             case 3:
-                title = "Genres";
+                title = "Playlists";
                 break;*/
         }
        return title;

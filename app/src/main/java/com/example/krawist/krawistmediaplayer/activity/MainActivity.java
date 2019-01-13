@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton previousButton ;
     LinearLayout layout;
     Musique musiqueEnCours;
+    private int activePage=0;
 
     Handler handler = new Handler();
 
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this,
                     PERMISSIONS,MY_PERMISSION_READ_EXTERNAL_STORAGE );
 
-        } else {
+        }else{
 
             initialiseApp();
         }
@@ -191,6 +193,8 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initialiseApp();
+                }else{
+                    finish();
                 }
             }
         }
@@ -205,6 +209,42 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+
+        tabLayout.setTabIndicatorFullWidth(true);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if(i==1){
+                    invalidateOptionsMenu();
+                    Log.e(TAG,"on invalide le menu");
+                }
+                activePage = i;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem item = menu.findItem(R.id.action_grid_colums);
+        if(activePage==1){
+                item.setVisible(true);
+        }else{
+            item.setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -221,9 +261,15 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+
+                break;
+
+            case R.id.action_search:
+                startActivity(new Intent(this,SearchActivity.class));
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);

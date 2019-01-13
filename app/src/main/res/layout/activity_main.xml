@@ -39,7 +39,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:text="Nihno - je compte"/>
+                android:text="Aucune musique en cours"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                 android:id="@+id/textview_song_artist"
                 android:textColor="@android:color/white"
                 android:alpha=".7"
-                android:text="Nihno"
+                android:text=""
                 android:textSize="16sp"
                 android:singleLine="true"
                 android:layout_below="@id/textview_song_title"/>

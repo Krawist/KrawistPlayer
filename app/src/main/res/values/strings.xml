@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">KrawistMusic</string>
     <string name="action_settings">Settings</string>
+    <string name="action_grid_colums">Taille de la grille</string>
+
+    <string name="search_hint">Rechercher une musique</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 
@@ -16,4 +19,6 @@
     <string name="delete_dialog_content">Voulez vous vraiment supprimer ce morceau?</string>
     <string name="delete_dialog_cancel_button_label">Annuler</string>
     <string name="delete_dialog_validate_button_label">Supprimer</string>
+
+    <string name="album_grid_preference_size_key">albumGridSize</string>
 </resources>

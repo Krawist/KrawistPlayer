@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.util.Log;
 import com.example.krawist.krawistmediaplayer.models.Album;
 import com.example.krawist.krawistmediaplayer.models.Artist;
 import com.example.krawist.krawistmediaplayer.models.Musique;
+import com.example.krawist.krawistmediaplayer.models.Playlist;
 
 import java.util.ArrayList;
 
@@ -53,12 +55,34 @@ public class Helper {
 
         Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,projection,selection,selectionArgs,MediaStore.Audio.Media.TITLE);
 
-        while(cursor.moveToNext()){
-            listOfSong.add(matchCursorLineToMusic(context,cursor));
+        if(cursor!=null){
+            while(cursor.moveToNext()){
+                listOfSong.add(matchCursorLineToMusic(context,cursor));
+            }
+            cursor.close();
         }
-        cursor.close();
 
         return listOfSong;
+    }
+
+    public static ArrayList<Playlist> getAllPlaylists(Context context){
+
+        ArrayList<Playlist> playlists = new ArrayList<>();
+
+        String[] projection = {MediaStore.Audio.Playlists._ID,
+                MediaStore.Audio.Playlists.NAME};
+
+        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,projection,null,null,MediaStore.Audio.Playlists.DEFAULT_SORT_ORDER);
+        if(cursor!=null){
+            while(cursor.moveToNext()){
+                playlists.add(matchCursorLineToPlaylist(context,cursor));
+            }
+
+            cursor.close();
+        }
+
+
+        return playlists;
     }
 
     public static ArrayList<Album> getAllAlbum(Context context){
@@ -71,13 +95,15 @@ public class Helper {
                 MediaStore.Audio.Albums.NUMBER_OF_SONGS};
 
 
-        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,projection,null,null,MediaStore.Audio.Albums.ALBUM);
-        while(cursor.moveToNext()){
-            //Log.e("Krawist",""+cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)));
-            listOfAlbum.add(matchCursorLineToAlbum(context,cursor));
-        }
+        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,projection,null,null,MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
+        if(cursor!=null){
+            while(cursor.moveToNext()){
+                //Log.e("Krawist",""+cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)));
+                listOfAlbum.add(matchCursorLineToAlbum(context,cursor));
+            }
 
-        cursor.close();
+            cursor.close();
+        }
 
         return listOfAlbum;
     }
@@ -103,12 +129,14 @@ public class Helper {
 
         listOfMusique.add(new Musique());
         Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,projection,selection,selectionArgs,MediaStore.Audio.Media.TRACK);
-        while(cursor.moveToNext()){
+        if(cursor!=null){
+            while(cursor.moveToNext()){
 
-            listOfMusique.add(matchCursorLineToMusic(context,cursor));
+                listOfMusique.add(matchCursorLineToMusic(context,cursor));
+            }
+
+            cursor.close();
         }
-
-        cursor.close();
 
         return listOfMusique;
     }
@@ -128,7 +156,7 @@ public class Helper {
         musique.setSize(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE)));
         musique.setPochette(Helper.DEFAULT_ALBUM_ART_STRING);
 
-        String[] projection = {MediaStore.Audio.Albums.ALBUM_ART, MediaStore.Audio.Albums._ID};
+/*        String[] projection = {MediaStore.Audio.Albums.ALBUM_ART, MediaStore.Audio.Albums._ID};
         String[] selectionArgs = {musique.getAlbumId()+""};
         //Log.e("Krawist"," Album Id "+musique.getAlbumId());
         String selection = MediaStore.Audio.Albums._ID + " = ?";
@@ -140,7 +168,7 @@ public class Helper {
                 musique.setPochette(anotherCursor.getString(anotherCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)));
             }
 
-        }
+        }*/
 
         return musique;
     }
@@ -153,7 +181,7 @@ public class Helper {
             //Log.e("Krawist"," Album Id "+musique.getAlbumId());
             String selection = MediaStore.Audio.Albums._ID + " = ?";
             Cursor anotherCursor = context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,projection,selection,selectionArgs,null);
-            if(anotherCursor.moveToFirst()){
+            if(anotherCursor!=null && anotherCursor.moveToFirst()){
                 if(anotherCursor.getString(anotherCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))==null){
                     musique.setPochette(Helper.DEFAULT_ALBUM_ART_STRING);
                 }else{
@@ -166,9 +194,54 @@ public class Helper {
         return listOfSong;
     }
 
+    public  static ArrayList<Musique> getResearchMusic(Context context, String searchCriterium){
+
+        ArrayList<Musique> listOfSong = new ArrayList<>();
+
+        String[] projection = {MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ALBUM_ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ARTIST_ID,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.TRACK,
+                MediaStore.Audio.Media.IS_MUSIC,
+                MediaStore.Audio.Media.SIZE};
+
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " = ? AND ("+
+                MediaStore.Audio.Media.ARTIST + " LIKE '%"+searchCriterium+"%' OR "+
+                MediaStore.Audio.Media.ALBUM + " LIKE '%"+searchCriterium+"%' OR " +
+                MediaStore.Audio.Media.TITLE + " LIKE '%"+searchCriterium+"%' )";
+
+        String[] selectionArgs = {1+""};
+
+
+        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,projection,selection,selectionArgs,MediaStore.Audio.Media.TITLE);
+
+        if(cursor!=null){
+            while(cursor.moveToNext()){
+                listOfSong.add(matchCursorLineToMusic(context,cursor));
+            }
+            cursor.close();
+        }
+
+        return listOfSong;
+    }
     /*public void get(Context context){
         context.getContentResolver().query(MediaStore.Audio.)
     }*/
+
+    public static Playlist matchCursorLineToPlaylist(Context context,Cursor cursor){
+        Playlist playlist = new Playlist();
+
+        playlist.setId(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists._ID)));
+        playlist.setName(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Playlists.NAME)));
+        playlist.setNumberOfSongs(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists._ID)));
+
+        return playlist;
+    }
 
     public static Album matchCursorLineToAlbum(Context context,Cursor cursor){
         Album album = new Album();
