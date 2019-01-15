@@ -21,4 +21,7 @@
     <string name="delete_dialog_validate_button_label">Supprimer</string>
 
     <string name="album_grid_preference_size_key">albumGridSize</string>
+    <string name="theme_color_preference_key">colortheme</string>
+    <string name="theme_color_default_value">#FFD81B60</string>
+
 </resources>

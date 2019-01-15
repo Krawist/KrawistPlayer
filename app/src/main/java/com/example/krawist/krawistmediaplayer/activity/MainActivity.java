@@ -5,11 +5,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -53,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout layout;
     Musique musiqueEnCours;
     private int activePage=0;
+    Toolbar toolbar;
+    SharedPreferences sharedPreferences;
 
     Handler handler = new Handler();
 
@@ -120,6 +126,31 @@ public class MainActivity extends AppCompatActivity {
          playButton= findViewById(R.id.imageview_play_button);
          previousButton = findViewById(R.id.imageview_previous_button);
          layout = findViewById(R.id.layout_option);
+         toolbar = findViewById(R.id.toolbar);
+         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if(key.equals(getString(R.string.theme_color_preference_key))){
+                    updateColor();
+                }
+            }
+        });
+
+
+        updateColor();
+    }
+
+    private void updateColor(){
+        String color = sharedPreferences.getString(getString(R.string.theme_color_preference_key),getString(R.string.theme_color_default_value));
+        toolbar.setBackgroundColor(Color.parseColor(color));
+        layout.setBackgroundColor(Color.parseColor(color));
+        tabLayout.setBackgroundColor(Color.parseColor(color));
+    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+        this.getWindow().setStatusBarColor(Color.parseColor(color));
+    }
     }
 
     private void configureBottonNaviagtion(){
@@ -264,6 +295,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_settings:
 
+                startActivity(new Intent(this,SettingsActivity.class));
+
                 break;
 
             case R.id.action_search:
@@ -292,4 +325,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+
+        updateColor();
+        super.onResume();
+    }
 }

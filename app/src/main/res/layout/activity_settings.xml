@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SettingsActivity"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/toolbar_detail_album"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layout_theme_color">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:padding="@dimen/fab_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Couleur Theme"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/albumdisplay_album_name_size" />
+
+            <TextView
+                android:id="@+id/textview_selected_color_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#123456"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/albumdisplay_album_artist_size"
+                android:alpha=".7"/>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_margin="8dp"
+            android:id="@+id/textview_color_preview"
+            android:background="@color/colorPrimary" />
+
+    </LinearLayout>
+
+</LinearLayout>

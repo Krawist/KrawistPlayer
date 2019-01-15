@@ -12,20 +12,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.default_searchable"
-                android:value=".activity.SearchActivity"/>
+
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".activity.SearchActivity" />
         </activity>
-
         <activity android:name=".activity.DetailAlbum" />
-
         <activity android:name=".activity.PlayingMusic">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,18 +47,20 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.PlayerService"
+        <service
+            android:name=".service.PlayerService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity android:name=".activity.SearchActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
-        </activity>
 
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
 
         <!--
             <receiver android:name=".receiver.ServiceReceiver"
@@ -69,6 +71,7 @@
             </intent-filter>
         </receiver>
         -->
+        <activity android:name=".activity.SettingsActivity"></activity>
     </application>
 
 </manifest>

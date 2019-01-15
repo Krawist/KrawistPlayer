@@ -74,8 +74,6 @@ public class AlbumFragment extends Fragment {
         adapter = new AlbumAdapter(listOfAlbum, context,getActivity(),gridSize);
 
         configureRecyclerView(gridSize);
-
-
         return view;
     }
 

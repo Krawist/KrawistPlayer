@@ -1,7 +1,11 @@
 package com.example.krawist.krawistmediaplayer.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -221,6 +225,21 @@ public class SearchActivity extends AppCompatActivity {
             });
             addPochetteThread.interrupt();
             addPochetteThread.start();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        updateColor();
+        super.onResume();
+    }
+
+    private void updateColor(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String color = sharedPreferences.getString(getString(R.string.theme_color_preference_key),getString(R.string.theme_color_default_value));
+        toolbar.setBackgroundColor(Color.parseColor(color));
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+            this.getWindow().setStatusBarColor(Color.parseColor(color));
         }
     }
 }
