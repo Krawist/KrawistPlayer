@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -26,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.example.krawist.krawistmediaplayer.R;
+import com.example.krawist.krawistmediaplayer.activity.SearchActivity;
 import com.example.krawist.krawistmediaplayer.adapter.AlbumAdapter;
 import com.example.krawist.krawistmediaplayer.helper.Helper;
 import com.example.krawist.krawistmediaplayer.models.Album;
@@ -121,7 +123,24 @@ public class AlbumFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        listOfAlbum = Helper.getAllAlbum(context);
-        adapter.swapItems(listOfAlbum);
+        UpdateMusicData updateMusicData = new UpdateMusicData();
+        updateMusicData.execute();
+    }
+
+    private class UpdateMusicData extends AsyncTask<Void,Void,Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            listOfAlbum = Helper.getAllAlbum(context);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            adapter.swapItems(listOfAlbum);
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,10 +38,12 @@ import android.widget.TextView;
 
 import com.example.krawist.krawistmediaplayer.R;
 import com.example.krawist.krawistmediaplayer.adapter.PageAdapter;
+import com.example.krawist.krawistmediaplayer.helper.Helper;
 import com.example.krawist.krawistmediaplayer.models.Musique;
 import com.example.krawist.krawistmediaplayer.service.PlayerService;
 
 import java.nio.InvalidMarkException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -331,4 +334,5 @@ public class MainActivity extends AppCompatActivity {
         updateColor();
         super.onResume();
     }
+
 }

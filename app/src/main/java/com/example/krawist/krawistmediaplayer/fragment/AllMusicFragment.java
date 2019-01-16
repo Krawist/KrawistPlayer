@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.krawist.krawistmediaplayer.R;
+import com.example.krawist.krawistmediaplayer.activity.MainActivity;
 import com.example.krawist.krawistmediaplayer.adapter.AllMusicAdapter;
 import com.example.krawist.krawistmediaplayer.helper.Helper;
 import com.example.krawist.krawistmediaplayer.models.Musique;
@@ -179,24 +181,30 @@ public class AllMusicFragment extends Fragment {
         dialog.show();
     }
 
-/*    @Override
+    @Override
     public void onResume() {
         super.onResume();
 
-        listOfSong = Helper.getAllMusique(context);
+        UpdateMusicData up = new UpdateMusicData();
+        up.execute();
+    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                listOfSong = Helper.updateMusic(context,listOfSong);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.swapItems(listOfSong);
-                    }
-                });
-            }
-        }).start();
-    }*/
+    private class UpdateMusicData extends AsyncTask<Void,Void,Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            listOfSong = Helper.getAllMusique(context);
+            listOfSong = Helper.updateMusic(context,listOfSong);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            adapter.swapItems(listOfSong);
+        }
+    }
 
 }

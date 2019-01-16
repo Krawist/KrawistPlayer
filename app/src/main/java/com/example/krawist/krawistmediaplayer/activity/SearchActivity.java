@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -43,20 +44,7 @@ public class SearchActivity extends AppCompatActivity {
     ImageButton backButton;
     EditText searchInput;
     Toolbar toolbar;
-
-    Thread addPochetteThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            listOfMusic = Helper.updateMusic(SearchActivity.this,listOfMusic);
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.swicthList(listOfMusic);
-                }
-            });
-        }
-    });
+    UpdateMusicData updateMusicData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +70,9 @@ public class SearchActivity extends AppCompatActivity {
         searchInput = findViewById(R.id.edittext_search_field);
 
         toolbar = findViewById(R.id.toolbar_search);
+
+        updateMusicData = new UpdateMusicData();
+
         setSupportActionBar(toolbar);
     }
 
@@ -120,15 +111,10 @@ public class SearchActivity extends AppCompatActivity {
     private void handleSearch(String word){
 
         if(word.length()>0){
-/*            searchThread.setWord(word);
-            searchThread.interrupt();
-            searchThread.start();*/
             listOfMusic = Helper.getResearchMusic(SearchActivity.this,word);
             adapter.swicthList(listOfMusic);
-/*            addPochetteThread.interrupt();
-            addPochetteThread.start();*/
-        }else{
-
+/*            UpdateMusicData updateMusicData = new UpdateMusicData();
+            updateMusicData.execute();*/
         }
 
     }
@@ -206,28 +192,6 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-    public class SearchThread extends Thread{
-        private String word = "";
-
-        public void setWord(String word){
-            this.word = word;
-        }
-
-        @Override
-        public void run() {
-
-            listOfMusic = Helper.getResearchMusic(SearchActivity.this,word);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.swicthList(listOfMusic);
-                }
-            });
-            addPochetteThread.interrupt();
-            addPochetteThread.start();
-        }
-    }
-
     @Override
     protected void onResume() {
         updateColor();
@@ -240,6 +204,23 @@ public class SearchActivity extends AppCompatActivity {
         toolbar.setBackgroundColor(Color.parseColor(color));
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
             this.getWindow().setStatusBarColor(Color.parseColor(color));
+        }
+    }
+
+    private class UpdateMusicData extends AsyncTask<Void,Void,Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            listOfMusic = Helper.updateMusic(SearchActivity.this,listOfMusic);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            adapter.swicthList(listOfMusic);
         }
     }
 }

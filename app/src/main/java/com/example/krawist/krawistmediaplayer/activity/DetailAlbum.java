@@ -2,7 +2,12 @@ package com.example.krawist.krawistmediaplayer.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -193,6 +198,7 @@ public class DetailAlbum extends AppCompatActivity {
 
     @Override
     public void onResume() {
+        updateColor();
         super.onResume();
 
         listOfAlbumSong = Helper.getAllAlbumSongs(this,album.getAlbumId());
@@ -209,5 +215,15 @@ public class DetailAlbum extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+
+    private void updateColor(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String color = sharedPreferences.getString(getString(R.string.theme_color_preference_key),getString(R.string.theme_color_default_value));
+        toolbar.setBackgroundColor(Color.parseColor(color));
+        floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+            this.getWindow().setStatusBarColor(Color.parseColor(color));
+        }
     }
 }
